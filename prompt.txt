@@ -1,0 +1,81 @@
+{
+  "education": [
+    {
+      "degree": "B.Tech in Computer Science",
+      "university": "IIT Delhi",
+      "year": "2020 - 2024",
+      "cgpa": "8.6/10"
+    }
+  ],
+
+  "skills": ["Python", "Java", "React.js", "SQL", "Machine Learning"],
+
+  "projects": [
+    {
+      "title": "AlgoAnims - Algorithm Visualizer",
+      "description": "Developed a React + Express app for visualizing algorithms with animations.",
+      "link": "github.com/rohanmehta/algoanims"
+    },
+    {
+      "title": "Airbnb Clone",
+      "description": "Built a full-stack web app using Node.js, Express, and MongoDB.",
+      "link": "github.com/rohanmehta/airbnb-clone"
+    }
+  ],
+
+  "experience": [
+    {
+      "role": "Software Engineering Intern",
+      "company": "Infosys",
+      "duration": "May 2023 - July 2023",
+      "work": [
+        "Worked on REST APIs",
+        "Optimized SQL queries",
+        "Improved response time by 20%"
+      ]
+    }
+  ]
+}
+company details
+{
+  "title": "Software Engineer Intern",
+  "company": "Google",
+  "location": "Bangalore, India",
+  "requirements": [
+    "Strong coding skills in Python/Java/C++",
+    "Experience with web technologies (React, Node.js)",
+    "Understanding of data structures & algorithms",
+    "Problem-solving & analytical skills"
+  ]
+}
+You are a resume generator.
+Input:
+- Candidate data (JSON)
+- Job description
+Task:
+Generate an ATS-optimized LaTeX resume, output section-wise.
+Output:
+Return strictly as a JSON object with keys:
+- "education"
+- "skills"
+- "experience"
+- "projects"
+- "additional"
+Rules:
+1. Each value = valid LaTeX snippet (\section*, \begin{itemize}, \item...).
+2. No \documentclass, \begin{document}, or \end{document}.
+3. No %, no //n, no \n — plain LaTeX inside JSON strings.
+4. Format: professional, ATS-friendly (no tables, icons, colors).
+5. Skills grouped: Languages, Frameworks, Databases, Concepts.
+6. Experience/Projects: title, company, duration + nested \begin{itemize} bullets.
+7. Must compile when inserted in template.
+8. Output = valid JSON only.
+Example:
+{
+  "education": "\\section*{Education}\\begin{itemize}\\item ...\\end{itemize}",
+  "skills": "\\section*{Skills}\\begin{itemize}\\item ...\\end{itemize}",
+  "experience": "...",
+  "projects": "...",
+  "additional": "..."
+}
+
