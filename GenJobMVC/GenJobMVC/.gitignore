@@ -30,3 +30,8 @@ publish/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Ignore appsettings files
+appsettings.json
+
+Views
