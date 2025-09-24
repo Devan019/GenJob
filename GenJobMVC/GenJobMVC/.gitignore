@@ -2,6 +2,8 @@
 bin/
 obj/
 
+appsettings.json
+
 # User-specific files
 *.user
 *.suo
@@ -30,8 +32,3 @@ publish/
 # OS generated files
 .DS_Store
 Thumbs.db
-
-# Ignore appsettings files
-appsettings.json
-
-Views
