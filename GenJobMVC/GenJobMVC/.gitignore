@@ -1,0 +1,32 @@
+# Build artifacts
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio temp files
+.vs/
+*.vsp
+*.vsscc
+
+# Rider
+.idea/
+
+# NuGet packages
+*.nupkg
+# Packages folder
+**/packages/*
+
+# Publish output
+publish/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
