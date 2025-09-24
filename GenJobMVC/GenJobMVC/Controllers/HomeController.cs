@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using GenJobMVC.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GenJobMVC.Controllers
 {
@@ -13,11 +14,13 @@ namespace GenJobMVC.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorize]
         public IActionResult Privacy()
         {
             return View();

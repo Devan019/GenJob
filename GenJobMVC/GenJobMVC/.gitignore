@@ -2,6 +2,8 @@
 bin/
 obj/
 
+appsettings.json
+
 # User-specific files
 *.user
 *.suo
