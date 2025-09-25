@@ -1,19 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using GenJobMVC.Models;
-using System.Threading.Tasks;
 
 namespace GenJobMVC.Controllers
 {
 
-    namespace MyAuthMySQL.Controllers
-    {
         public class AccountController : Controller
         {
-            private readonly UserManager<IdentityUser> _userManager;
-            private readonly SignInManager<IdentityUser> _signInManager;
+            private readonly UserManager<User> _userManager;
+            private readonly SignInManager<User> _signInManager;
 
-            public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+            public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
             {
                 _userManager = userManager;
                 _signInManager = signInManager;
@@ -27,7 +24,7 @@ namespace GenJobMVC.Controllers
             {
                 if (!ModelState.IsValid) return View(model);
 
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+                var user = new User { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
@@ -66,6 +63,5 @@ namespace GenJobMVC.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
-    }
 
 }
