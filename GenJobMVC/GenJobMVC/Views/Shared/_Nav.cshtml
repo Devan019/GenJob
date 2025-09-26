@@ -15,11 +15,48 @@
         </svg>
         <span class="ml-2 text-xl font-bold tracking-wide text-gray-100 uppercase">GenJob</span>
       </a>
-      <ul class="flex items-center hidden space-x-8 lg:flex">
-        <li><a href="/" aria-label="About us" title="About us" class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-accent-400">About us</a></li>
-        <li><a href="/" aria-label="Sign in" title="Sign in" class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-accent-400">Sign in</a></li>
-        <li><a href="/" aria-label="Sign up" title="Sign up" class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-accent-400">Sign up</a></li>
-      </ul>
+            <ul class="flex items-center hidden space-x-8 lg:flex">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <!-- When logged in -->
+                    <li>
+                        <span class="font-medium tracking-wide text-gray-100">
+                            Hello, @User.Identity.Name
+                        </span>
+                    </li>
+                    <li>
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
+                            <button type="submit"
+                                    class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-400">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <!-- When NOT logged in -->
+                    <li>
+                        <a asp-controller="Home" asp-action="About"
+                           class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-400">
+                            About us
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Account" asp-action="Login"
+                           class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-400">
+                            Sign in
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Account" asp-action="Register"
+                           class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-400">
+                            Sign up
+                        </a>
+                    </li>
+                }
+            </ul>
+
       <!-- Mobile menu -->
       <div class="lg:hidden">
         <button aria-label="Open Menu" title="Open Menu" class="p-2 -mr-1 transition duration-200 rounded focus:outline-none focus:shadow-outline">

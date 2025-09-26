@@ -10,6 +10,24 @@ namespace GenJobMVC.Data
         {
             public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
                 : base(options) { }
+
+            protected override void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                base.OnModelCreating(modelBuilder);
+
+                // Set default max length = 191 for all string properties
+                foreach (var entity in modelBuilder.Model.GetEntityTypes())
+                {
+                    foreach (var property in entity.GetProperties())
+                    {
+                        if (property.ClrType == typeof(string) && property.GetMaxLength() == null)
+                        {
+                            property.SetMaxLength(191);
+                        }
+                    }
+                }
+            }
+
         }
     }
 

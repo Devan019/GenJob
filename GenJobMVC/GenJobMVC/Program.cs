@@ -24,6 +24,13 @@ builder.Services
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";       // your custom controller
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
+
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages(); // Needed for Identity UIs
 

@@ -1,18 +1,44 @@
 ﻿@model GenJobMVC.Models.LoginViewModel
-<h2>Login</h2>
-<form asp-action="Login" method="post">
-    <div>
-        <label>Email</label>
-        <input asp-for="Email" />
-        <span asp-validation-for="Email"></span>
+<div class="px-4 py-16 w-full md:px-24 lg:px-8 lg:py-20 bg-gray-900 text-gray-100">
+    <div class="max-w-md mx-auto bg-gray-800 rounded-2xl shadow-lg p-8">
+        <h2 class="mb-6 text-2xl font-bold text-center text-white">Sign in to your account</h2>
+
+        <form asp-action="Login" method="post" class="space-y-6">
+            <!-- Email -->
+            <div>
+                <label asp-for="Email" class="block mb-2 text-sm font-medium text-gray-300">Email</label>
+                <input asp-for="Email"
+                       class="w-full px-4 py-2 text-gray-900 rounded-lg border border-gray-700 focus:ring-2 focus:ring-teal-500 focus:outline-none" />
+                <span asp-validation-for="Email" class="text-sm text-red-400"></span>
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label asp-for="Password" class="block mb-2 text-sm font-medium text-gray-300">Password</label>
+                <input asp-for="Password" type="password"
+                       class="w-full px-4 py-2 text-gray-900 rounded-lg border border-gray-700 focus:ring-2 focus:ring-teal-500 focus:outline-none" />
+                <span asp-validation-for="Password" class="text-sm text-red-400"></span>
+            </div>
+
+            <!-- Remember Me -->
+            <div class="flex items-center">
+                <input asp-for="RememberMe"
+                       class="w-4 h-4 text-teal-600 border-gray-700 rounded focus:ring-teal-500" />
+                <label asp-for="RememberMe" class="ml-2 text-sm text-gray-300">Remember me</label>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit"
+                    class="w-full px-4 py-2 text-white bg-teal-600 rounded-lg hover:bg-teal-500 transition-colors duration-200 font-semibold">
+                Login
+            </button>
+        </form>
+
+        <!-- Extra links -->
+        <p class="mt-6 text-sm text-center text-gray-400">
+            Don’t have an account?
+            <a asp-controller="Account" asp-action="Register" class="text-teal-400 hover:underline">Sign up</a>
+        </p>
     </div>
-    <div>
-        <label>Password</label>
-        <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <div>
-        <input asp-for="RememberMe" /> Remember me
-    </div>
-    <button type="submit">Login</button>
-</form>
+</div>
+
