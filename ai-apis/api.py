@@ -5,7 +5,7 @@ from pydantic import BaseModel
 import json
 app = FastAPI()
 
-
+from helpers.salary_prediciton import getOtherData, getSalaryPrediction, getCompanies
 class EducationItem(BaseModel):
     degree: str
     university: str
@@ -127,6 +127,32 @@ def process_string(item: dataItem):
 
 
     return latex_text
+
+@app.get("/get-company-names")
+def getNames():
+    data = getCompanies()
+    return {"company_list" : data}
+
+class OtherItemModel(BaseModel):
+    company_name : str
+
+@app.post("/get-other-data")
+def otherData(item: OtherItemModel):
+    data = getOtherData(item.company_name)
+    return {"data" : data}
+
+class PredictSalaryModel(BaseModel):
+    company_name : str
+    job_role:str
+    location:str
+    status:str
+
+@app.post("/predict-salary")
+def predictSalary(data: PredictSalaryModel):
+    salary = getSalaryPrediction(company_name=data.company_name,
+                                 job_roles=data.job_role,
+                                 location=data.location)
+    
 
 if __name__ == "__main__":
     import uvicorn

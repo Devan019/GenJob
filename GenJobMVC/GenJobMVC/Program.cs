@@ -2,6 +2,7 @@ using GenJobMVC.Data.MyAuthMySQL.Data;
 using GenJobMVC.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Redis.OM;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages(); // Needed for Identity UIs
+
+builder.Services.AddHttpClient();  //for make apis
+
+//for redis
+var redisConnectionString = builder.Configuration["REDIS_CONNECTION_STRING"];
+builder.Services.AddSingleton(new RedisConnectionProvider(redisConnectionString));
+builder.Services.AddHostedService<IndexCreationService>();
 
 var app = builder.Build();
 

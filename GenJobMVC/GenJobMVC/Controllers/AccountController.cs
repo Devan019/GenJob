@@ -26,13 +26,13 @@ namespace GenJobMVC.Controllers
 
                 var user = new User { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
-
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
 
+                
                 foreach (var error in result.Errors)
                     ModelState.AddModelError("", error.Description);
 
