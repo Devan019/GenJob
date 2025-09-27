@@ -151,7 +151,10 @@ class PredictSalaryModel(BaseModel):
 def predictSalary(data: PredictSalaryModel):
     salary = getSalaryPrediction(company_name=data.company_name,
                                  job_roles=data.job_role,
-                                 location=data.location)
+                                 location=data.location,
+                                 employment_status=data.status
+                                )
+    return {"predicted_salary" : salary}
     
 
 if __name__ == "__main__":

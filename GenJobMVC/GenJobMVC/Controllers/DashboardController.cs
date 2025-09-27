@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 using GenJobMVC.Models;
+using GenJobMVC.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -31,16 +32,21 @@ namespace GenJobMVC.Controllers
         {
             return View();
         }
-
+        
+        
+        [Authorize]
+        [HttpGet]
         public async Task<IActionResult> SalaryPrediction()
         {
             string api = "http://localhost:8000/get-company-names";
             string userId = _userManager.GetUserId(User);
 
             var exits = _company.FindById(userId);
+            CompanyViewModel companyViewModel = new CompanyViewModel();
             if (exits != null)
             {
-                return Json(exits.company);
+                companyViewModel.company = exits.company;
+                return View(companyViewModel);
             }
             
             try
@@ -59,7 +65,9 @@ namespace GenJobMVC.Controllers
                 companyModel.company = companyList;
                 companyModel.Id = userId;
                 _company.Insert(companyModel);
-                return Json(companyList);
+                
+                companyViewModel.company = companyList;
+                return View( companyViewModel);
             }
             catch (HttpRequestException httpEx)
             {
@@ -74,6 +82,23 @@ namespace GenJobMVC.Controllers
             }
         }
         
+        [HttpPost]
+        public async Task<IActionResult> GetCompanyDetails([FromBody] CompanyRequest company)
+        {
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:8000/get-other-data", company);
+            var data = await response.Content.ReadAsStringAsync();
+            return Content(data, "application/json");
+        }
+
+        
+        [HttpPost]
+        public async Task<IActionResult> Predict([FromBody] PredictRequest  req)
+        {
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:8000/predict-salary", req);
+            var data = await response.Content.ReadAsStringAsync();
+            return Content(data, "application/json");
+        }
+        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -81,4 +106,17 @@ namespace GenJobMVC.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
+}
+
+public class CompanyRequest
+{
+    public string company_name { get; set; }
+}
+
+public class PredictRequest
+{
+    public string company_name { get; set; }
+    public string job_role { get; set; }
+    public string location { get; set; }
+    public string status { get; set; }
 }

@@ -54,7 +54,7 @@ def getSalaryPrediction(company_name, job_roles, location, employment_status):
   #get salary
   salary = scalar.inverse_transform(predict_val.reshape(-1, 1))[0][0]
 
-  return salary 
+  return f"₹{salary:,.2f}"
 
 #get companies
 def getCompanies():
