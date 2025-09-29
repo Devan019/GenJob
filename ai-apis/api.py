@@ -6,6 +6,8 @@ import json
 app = FastAPI()
 
 from helpers.salary_prediciton import getOtherData, getSalaryPrediction, getCompanies
+from helpers.job_analisys import getGraphData
+from helpers.gen_latex import generate_latex
 class EducationItem(BaseModel):
     degree: str
     university: str
@@ -72,8 +74,14 @@ def jsonConverter(itme: dataItem):
 
 
 @app.post("/generate_latex/")
-def genWholeLatex(candidate: Candidate, job_description: JobDescription):
-    from helpers.gen_latex import generate_latex
+def genWholeLatex(
+    candidate: Candidate, 
+    job_description: JobDescription, 
+    links: dict,
+    resume_type: int
+):
+    
+
     latex_code = generate_latex(
         education=candidate.education,
         skills=candidate.skills,
@@ -82,31 +90,51 @@ def genWholeLatex(candidate: Candidate, job_description: JobDescription):
         additional=candidate.additional,
         company_details=job_description.dict()
     )
-    code: str = latex_code
-    json_code = json.loads(code)
-    template = r"""\documentclass[10pt]{article}
-\usepackage[margin=0.7in]{geometry}
-\usepackage{helvet}
-\renewcommand{\familydefault}{\sfdefault}
-\usepackage{enumitem}
-\setlist[itemize]{leftmargin=*,noitemsep,topsep=0pt}
-\usepackage[hidelinks]{hyperref}
-\pagenumbering{gobble}
-\linespread{1.1}
+    json_code = json.loads(latex_code)
 
-\begin{document}
+    # Build LaTeX links dynamically
+    links_latex = " \,|\, ".join([rf"\href{{{url}}}{{{name}}}" for name, url in (links or {}).items()])
 
-\begin{center}
-    {\LARGE \textbf{ """ + candidate.name + r""" }} \\[2pt]
-    \href{mailto:""" + candidate.email + r"""}{""" + candidate.email + r"""} \,|\, """ + candidate.phone + r""" \,|\, 
-    \href{""" + candidate.linkedin + r"""}{""" + candidate.linkedin + r"""} \,|\, 
-    \href{""" + candidate.github + r"""}{""" + candidate.github + r"""}
-\end{center}
-\vspace{4pt}
+    # Horizontal layout (type=1)
+    if resume_type == 1:
+        header_block = rf"""
+\begin{{center}}
+    {{\LARGE \textbf{{ {candidate.name} }}}} \\[2pt]
+    \href{{mailto:{candidate.email}}}{{{candidate.email}}} \,|\, {candidate.phone} \,|\, {links_latex}
+\end{{center}}
+\vspace{{4pt}}
+"""
+    # Vertical layout (type=2)
+    else:
+        header_block = rf"""
+\begin{{center}}
+    {{\LARGE \textbf{{ {candidate.name} }}}} \\[4pt]
+    \href{{mailto:{candidate.email}}}{{{candidate.email}}} \\[2pt]
+    {candidate.phone} \\[2pt]
+    {links_latex}
+\end{{center}}
+\vspace{{4pt}}
 """
 
+    template = rf"""\documentclass[10pt]{{article}}
+\usepackage[margin=0.7in]{{geometry}}
+\usepackage{{helvet}}
+\renewcommand{{\familydefault}}{{\sfdefault}}
+\usepackage{{enumitem}}
+\setlist[itemize]{{leftmargin=*,noitemsep,topsep=0pt}}
+\usepackage[hidelinks]{{hyperref}}
+\pagenumbering{{gobble}}
+\linespread{{1.1}}
 
-    template += f"""{json_code["education"]}""" + f"""{json_code["skills"]}""" + f"""{json_code["experience"]}""" + f"""{json_code["projects"]}""" + f"""{json_code["additional"]}"""  + r"""\end{document}"""
+\begin{{document}}
+{header_block}
+{json_code["education"]}
+{json_code["skills"]}
+{json_code["experience"]}
+{json_code["projects"]}
+{json_code["additional"]}
+\end{{document}}
+"""
 
     with open("resume.tex", "w") as f:
         f.write(template)
@@ -155,6 +183,11 @@ def predictSalary(data: PredictSalaryModel):
                                  employment_status=data.status
                                 )
     return {"predicted_salary" : salary}
+
+@app.get("/get-graph-data")
+def graphData():
+    obj = getGraphData()
+    return obj
     
 
 if __name__ == "__main__":

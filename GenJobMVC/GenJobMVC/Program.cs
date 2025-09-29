@@ -41,6 +41,7 @@ builder.Services.AddHttpClient();  //for make apis
 var redisConnectionString = builder.Configuration["REDIS_CONNECTION_STRING"];
 builder.Services.AddSingleton(new RedisConnectionProvider(redisConnectionString));
 builder.Services.AddHostedService<IndexCreationService>();
+builder.Services.Configure<AI_API>(builder.Configuration.GetSection("AI_API"));
 
 var app = builder.Build();
 

@@ -15,7 +15,7 @@ def main():
     print("Preprocessing data...")
     data = pd.DataFrame({
         "company_name": data["Company Name"],
-        "job_roles": data["Job Roles"],
+        "job_roles": data["Job Title"],
         "location": data["Location"],
         "salary": data["Salary"],
         "employment_status": data["Employment Status"]

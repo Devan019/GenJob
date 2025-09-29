@@ -17,14 +17,13 @@ data = pd.read_csv(dataset)
 #extract data for model
 model_data = pd.DataFrame({
   "company_name" : data["Company Name"],
-  "job_roles" : data["Job Roles"],
+  "job_roles" : data["Job Title"],
   "location" : data["Location"],
   "salary" : data["Salary"],
   "employment_status" : data["Employment Status"]
 })
 #only input data with one-hot encoding
 input_data = pd.get_dummies(data=model_data, columns=["company_name", "job_roles", "location", "employment_status"], dtype=int).drop(columns=["salary"])
-
 #model load
 with open(model_path, "rb") as f:
   model: LinearRegression = pickle.load(f)
@@ -45,7 +44,6 @@ def getSalaryPrediction(company_name, job_roles, location, employment_status):
 
   #encoding
   user_data_encoded = pd.get_dummies(user_data, columns=["company_name","job_roles", "location", "employment_status"], dtype=int)
-
   #reindex and fill - 0
   user_data_encoded = user_data_encoded.reindex(columns=input_data.columns, fill_value=0)
   #predict
@@ -86,5 +84,5 @@ if __name__ == "__main__":
   job_roles = "Web"
   location = "Bangalore"
   employment_status = "Full Time"
-  print(f"The predicted salary is: {getSalaryPrediction(company_name, job_roles, location, employment_status):,.2f}")
+  print(getSalaryPrediction(company_name, job_roles, location, employment_status))
   

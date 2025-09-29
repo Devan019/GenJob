@@ -6,7 +6,14 @@ dotenv.load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 
-def generate_latex(education, skills, experience, projects, additional, company_details) -> str:
+def generate_latex(education, skills, experience, projects, additional, company_details, resume_type: int = 1) -> str:
+    """
+    resume_type:
+        1 = horizontal layout (contact info in one line)
+        2 = vertical layout (contact info stacked)
+    """
+    layout_instruction = "horizontal (contact info in one line)" if resume_type == 1 else "vertical (contact info stacked)"
+
     prompt = f"""
 You are a resume generator.
 
@@ -26,23 +33,24 @@ Return a valid JSON with keys: "education", "skills", "experience", "projects", 
 Each value = one LaTeX string.
 
 Rules:
-1. Escape backslashes as `\`.  
-2. No preamble (`\documentclass`, `\begin{{document}}`, `\end{{document}}`).  
-3. No `%`, comments, or `\n`.  
+1. Escape backslashes as `\\`.  
+2. No preamble (`\\documentclass`, `\\begin{{document}}`, `\\end{{document}}`).  
+3. No `%`, comments, or `\\n`.  
 4. Format:  
-   - Education: `\section*{{Education}} \begin{{itemize}} ... \end{{itemize}}`  
+   - Education: `\\section*{{Education}} \\begin{{itemize}} ... \\end{{itemize}}`  
    - Skills: bullet points, one per category:  
      ```
-     \section*{{Skills}}
-     \begin{{itemize}}
-       \item \textbf{{Languages}}: ...
-       \item \textbf{{Frameworks}}: ...
-     \end{{itemize}}
+     \\section*{{Skills}}
+     \\begin{{itemize}}
+       \\item \\textbf{{Languages}}: ...
+       \\item \\textbf{{Frameworks}}: ...
+     \\end{{itemize}}
      ```
-   - Experience/Projects: `\section*{{...}} \textbf{{Role, Org}} \hfill Date \begin{{itemize}} ... \end{{itemize}}`  
+   - Experience/Projects: `\\section*{{...}} \\textbf{{Role, Org}} \\hfill Date \\begin{{itemize}} ... \\end{{itemize}}`  
    - Additional: same style, or `""` if empty.  
 5. Strict JSON: double quotes, no trailing commas.  
-6. Use /% instead of only %
+6. Use /% instead of only %  
+7. Generate content **optimized for a {layout_instruction} resume**.
 Output JSON only.
 """
 
