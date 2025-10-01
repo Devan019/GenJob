@@ -1,0 +1,631 @@
+@Html.Partial("_Sidebar")
+<div class="container mx-auto p-6 max-w-4xl">
+    <h1 class="text-3xl text-white font-bold mb-2 text-center">Resume Builder</h1>
+    <p class="text-gray-400 mb-8 text-center">Fill in your details to create a professional resume</p>
+
+    <form id="resumeForm" class="space-y-8">
+        <!-- Job Description Section -->
+        <div class="bg-gray-800 rounded-lg p-6 shadow-lg">
+            <h2 class="text-xl font-semibold mb-4 text-blue-400">Target Job Description</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="jobTitle" class="text-white block text-sm font-medium mb-1">Job Title</label>
+                    <input type="text" id="jobTitle" name="jobTitle"
+                           class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Full Stack Developer">
+                </div>
+                <div>
+                    <label for="jobCompany" class="text-white block text-sm font-medium mb-1">Company</label>
+                    <input type="text" id="jobCompany" name="jobCompany"
+                           class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Microsoft">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="jobLocation" class="text-white block text-sm font-medium mb-1">Location</label>
+                    <input type="text" id="jobLocation" name="jobLocation"
+                           class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Bangalore, India">
+                </div>
+            </div>
+
+            <!-- Requirements Section -->
+            <div class="mt-6">
+                <h3 class="text-lg font-semibold mb-3 text-blue-300">Job Requirements</h3>
+                <div id="requirementsContainer" class="space-y-3">
+                    <div class="requirement-entry flex items-center gap-3">
+                        <input type="text" name="requirement"
+                               class="text-white flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="Proficiency in React.js and Node.js">
+                        <button type="button"
+                                class="remove-requirement px-3 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white"
+                                onclick="this.parentElement.remove()">
+                            Remove
+                        </button>
+                    </div>
+                </div>
+                <button type="button" id="addRequirement"
+                        class="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-medium">
+                    Add Requirement
+                </button>
+            </div>
+        </div>
+
+        <!-- Personal Information Section -->
+        <div class="bg-gray-800 rounded-lg p-6 shadow-lg">
+            <h2 class="text-xl font-semibold mb-4 text-blue-400">Personal Information</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="name" class="text-white block text-sm font-medium mb-1">Full Name</label>
+                    <input type="text" id="name" name="name"
+                           class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Devan Chauhan">
+                </div>
+                <div>
+                    <label for="email" class="text-white  block text-sm font-medium mb-1">Email</label>
+                    <input type="email" id="email" name="email"
+                           class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="devan.chauhan@example.com">
+                </div>
+                <div>
+                    <label for="phone" class="text-white  block text-sm font-medium mb-1">Phone</label>
+                    <input type="tel" id="phone" name="phone"
+                           class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="+91-9876543210">
+                </div>
+                <div>
+                    <label for="linkedin" class="text-white  block text-sm font-medium mb-1">LinkedIn URL</label>
+                    <input type="url" id="linkedin" name="linkedin"
+                           class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="https://www.linkedin.com/in/devanchauhan">
+                </div>
+                <div>
+                    <label for="github" class="text-white  block text-sm font-medium mb-1">GitHub URL</label>
+                    <input type="url" id="github" name="github"
+                           class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="https://github.com/devanchauhan">
+                </div>
+            </div>
+        </div>
+
+        <!-- Education Section -->
+        <div class="bg-gray-800 rounded-lg p-6 shadow-lg">
+            <h2 class="text-xl font-semibold mb-4 text-blue-400">Education</h2>
+            <div id="educationContainer">
+                <div class="education-entry grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="degree" class="text-white  block text-sm font-medium mb-1">Degree</label>
+                        <input type="text" id="degree" name="degree"
+                               class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="B.Tech in Computer Science">
+                    </div>
+                    <div>
+                        <label for="university" class="text-white  block text-sm font-medium mb-1">University</label>
+                        <input type="text" id="university" name="university"
+                               class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="Indian Institute of Technology, Delhi">
+                    </div>
+                    <div>
+                        <label for="year" class="text-white  block text-sm font-medium mb-1">Year</label>
+                        <input type="text" id="year" name="year"
+                               class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="2021 - 2025">
+                    </div>
+                    <div>
+                        <label for="cgpa" class="text-white  block text-sm font-medium mb-1">CGPA/Percentage</label>
+                        <input type="text" id="cgpa" name="cgpa"
+                               class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="8.7/10">
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="addEducation"
+                    class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-medium">Add Another
+                Education
+            </button>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="bg-gray-800 rounded-lg p-6 shadow-lg">
+            <h2 class="text-xl font-semibold mb-4 text-blue-400">Skills</h2>
+            <div id="skillsContainer" class="flex flex-wrap gap-2 mb-4">
+                <input type="text" id="skillInput"
+                       class="px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       placeholder="Add a skill">
+                <button type="button" id="addSkill"
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-medium">Add Skill
+                </button>
+            </div>
+            <div id="skillsList" class="flex flex-wrap gap-2">
+                <!-- Skills will be added here dynamically -->
+            </div>
+        </div>
+
+        <!-- Projects Section -->
+        <div class="bg-gray-800 rounded-lg p-6 shadow-lg">
+            <h2 class="text-xl font-semibold mb-4 text-blue-400">Projects</h2>
+            <div id="projectsContainer">
+                <div class="project-entry grid grid-cols-1 gap-4 mb-6 p-4 border border-gray-700 rounded-md">
+                    <div>
+                        <label for="projectTitle" class="text-white block text-sm font-medium mb-1">Project
+                            Title</label>
+                        <input type="text" id="projectTitle" name="projectTitle"
+                               class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="AlgoAnims">
+                    </div>
+                    <div>
+                        <label for="projectDescription"
+                               class="text-white block text-sm font-medium mb-1">Description</label>
+                        <textarea id="projectDescription" name="projectDescription" rows="3"
+                                  class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  placeholder="A platform for visualizing algorithms and data structures with real-time animations..."></textarea>
+                    </div>
+                    <div>
+                        <label for="projectLink" class="text-white  block text-sm font-medium mb-1">Project Link</label>
+                        <input type="url" id="projectLink" name="projectLink"
+                               class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="https://algoanims.vercel.app">
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="addProject"
+                    class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-medium">Add Another
+                Project
+            </button>
+        </div>
+
+        <!-- Experience Section -->
+        <div class="bg-gray-800 rounded-lg p-6 shadow-lg">
+            <h2 class="text-xl font-semibold mb-4 text-blue-400">Work Experience</h2>
+            <div id="experienceContainer">
+                <div class="experience-entry grid grid-cols-1 gap-4 mb-6 p-4 border border-gray-700 rounded-md">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="role" class="text-white  block text-sm font-medium mb-1">Role</label>
+                            <input type="text" id="role" name="role"
+                                   class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="Software Engineering Intern">
+                        </div>
+                        <div>
+                            <label for="company" class="text-white  block text-sm font-medium mb-1">Company</label>
+                            <input type="text" id="company" name="company"
+                                   class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="Google">
+                        </div>
+                        <div>
+                            <label for="duration" class="text-white  block text-sm font-medium mb-1">Duration</label>
+                            <input type="text" id="duration" name="duration"
+                                   class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="May 2024 - July 2024">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="workDescription" class="text-white  block text-sm font-medium mb-1">Work
+                            Description</label>
+                        <textarea id="workDescription" name="workDescription" rows="3"
+                                  class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  placeholder="Developed internal tools for optimizing cloud deployments..."></textarea>
+                        <p class="text-xs text-gray-400 mt-1">Use bullet points separated by new lines</p>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="addExperience"
+                    class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-medium">Add Another
+                Experience
+            </button>
+        </div>
+
+        <!-- Additional Information Section -->
+        <div class="bg-gray-800 rounded-lg p-6 shadow-lg">
+            <h2 class="text-xl font-semibold mb-4 text-blue-400">Additional Information</h2>
+            <div id="additionalContainer">
+                <div class="additional-entry mb-4">
+                    <textarea id="additionalInfo" name="additionalInfo" rows="3"
+                              class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Organized Winter Tech Break event covering WebRTC, Redis, Kafka..."></textarea>
+                    <p class="text-xs text-gray-400 mt-1">Enter each item on a new line</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Links Section -->
+        <div class="bg-gray-800 rounded-lg p-6 shadow-lg">
+            <h2 class=" text-xl font-semibold mb-4 text-blue-400">Additional Links</h2>
+            <div id="linksContainer" class="space-y-4">
+                <div class="link-entry grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border border-gray-700 rounded-md">
+                    <div>
+                        <label class="text-white block text-sm font-medium mb-1">Link Title</label>
+                        <input type="text" name="linkTitle"
+                               class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="Portfolio">
+                    </div>
+                    <div>
+                        <label class="text-white block text-sm font-medium mb-1">URL</label>
+                        <input type="url" name="linkUrl"
+                               class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="https://devanchauhan.com">
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="addLink"
+                    class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-medium">Add Another
+                Link
+            </button>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-center">
+            <button type="submit"
+                    class="px-8 py-3 bg-green-600 hover:bg-green-700 rounded-md text-white font-bold text-lg">
+                Generate
+                Resume
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Backdrop with blur -->
+<div id="resume-modal-backdrop" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"></div>
+
+<!-- Modal -->
+<div id="resume-modal" tabindex="-1" aria-hidden="true"
+     class="hidden fixed top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center w-full h-full">
+    <div class="relative p-4 w-full max-w-4xl max-h-full">
+        <!-- Modal content -->
+        <div
+            class="relative bg-white rounded-lg shadow-lg dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-6 border-b rounded-t dark:border-gray-600 border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Your Resume</h3>
+                <button type="button" id="close-modal"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="p-6 space-y-4  overflow-y-auto">
+                <div class="flex justify-center">
+                    <iframe id="resume-iframe" src=""
+                            class="w-full h-[80vh] border border-gray-300 rounded-lg dark:border-gray-600"></iframe>
+                </div>
+                
+            </div>
+
+            
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_Loader")
+
+<script>
+    function showLoader() {
+        document.getElementById("loader").classList.remove("hidden");
+    }
+    function hideLoader() {
+        document.getElementById("loader").classList.add("hidden");
+    }
+
+    function showModal(resumeUrl) {
+        const modal = document.getElementById('resume-modal');
+        const backdrop = document.getElementById('resume-modal-backdrop');
+        const iframe = document.getElementById('resume-iframe');
+
+        // Set the iframe source
+        iframe.src = resumeUrl;
+
+        // Show modal and backdrop
+        modal.classList.remove('hidden');
+        backdrop.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    function hideModal() {
+        const modal = document.getElementById('resume-modal');
+        const backdrop = document.getElementById('resume-modal-backdrop');
+        const iframe = document.getElementById('resume-iframe');
+
+        // Hide modal and backdrop
+        modal.classList.add('hidden');
+        backdrop.classList.add('hidden');
+        document.body.style.overflow = 'auto'; // Re-enable scrolling
+
+        // Clear iframe source
+        iframe.src = '';
+    }
+    
+    document.querySelector("#close-modal").addEventListener("click", hideModal);
+
+    
+    // Job Description Requirements functionality
+    document.getElementById('addRequirement').addEventListener('click', function () {
+        const container = document.getElementById('requirementsContainer');
+        const newEntry = document.createElement('div');
+        newEntry.className = 'requirement-entry flex items-center gap-3';
+        newEntry.innerHTML = `
+            <input type="text" name="requirement"
+                   class="text-white flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   placeholder="Experience with cloud services (AWS/Azure)">
+            <button type="button" class="remove-requirement px-3 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white" onclick="this.parentElement.remove()">
+                Remove
+            </button>
+        `;
+        container.appendChild(newEntry);
+    });
+
+    // Skills functionality
+    document.getElementById('addSkill').addEventListener('click', function () {
+        const skillInput = document.getElementById('skillInput');
+        const skill = skillInput.value.trim();
+
+        if (skill) {
+            const skillElement = document.createElement('div');
+            skillElement.className = 'bg-blue-800 text-white px-3 py-1 rounded-full flex items-center';
+            skillElement.innerHTML = `
+                    ${skill}
+                    <button type="button" class="ml-2 text-red-400 hover:text-red-300" onclick="this.parentElement.remove()">×</button>
+                `;
+            document.getElementById('skillsList').appendChild(skillElement);
+            skillInput.value = '';
+        }
+    });
+
+    // Add education entry
+    document.getElementById('addEducation').addEventListener('click', function () {
+        const container = document.getElementById('educationContainer');
+        const newEntry = document.createElement('div');
+        newEntry.className = 'education-entry grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-4 p-4 border border-gray-700 rounded-md';
+        newEntry.innerHTML = `
+                <div>
+                    <label class="block text-sm font-medium mb-1">Degree</label>
+                    <input type="text" name="degree" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="B.Tech in Computer Science">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">University</label>
+                    <input type="text" name="university" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Indian Institute of Technology, Delhi">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Year</label>
+                    <input type="text" name="year" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="2021 - 2025">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">CGPA/Percentage</label>
+                    <input type="text" name="cgpa" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="8.7/10">
+                </div>
+                <div class="md:col-span-2 flex justify-end">
+                    <button type="button" class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-white" onclick="this.parentElement.parentElement.remove()">Remove</button>
+                </div>
+            `;
+        container.appendChild(newEntry);
+    });
+
+    // Add project entry
+    document.getElementById('addProject').addEventListener('click', function () {
+        const container = document.getElementById('projectsContainer');
+        const newEntry = document.createElement('div');
+        newEntry.className = 'project-entry grid grid-cols-1 gap-4 mb-6 p-4 border border-gray-700 rounded-md';
+        newEntry.innerHTML = `
+                <div>
+                    <label class="block text-sm font-medium mb-1">Project Title</label>
+                    <input type="text" name="projectTitle" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="AlgoAnims">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Description</label>
+                    <textarea name="projectDescription" rows="3" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="A platform for visualizing algorithms and data structures with real-time animations..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Project Link</label>
+                    <input type="url" name="projectLink" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://algoanims.vercel.app">
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-white" onclick="this.parentElement.parentElement.remove()">Remove</button>
+                </div>
+            `;
+        container.appendChild(newEntry);
+    });
+
+    // Add experience entry
+    document.getElementById('addExperience').addEventListener('click', function () {
+        const container = document.getElementById('experienceContainer');
+        const newEntry = document.createElement('div');
+        newEntry.className = 'experience-entry grid grid-cols-1 gap-4 mb-6 p-4 border border-gray-700 rounded-md';
+        newEntry.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Role</label>
+                        <input type="text" name="role" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Software Engineering Intern">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Company</label>
+                        <input type="text" name="company" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Google">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Duration</label>
+                        <input type="text" name="duration" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="May 2024 - July 2024">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Work Description</label>
+                    <textarea name="workDescription" rows="3" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Developed internal tools for optimizing cloud deployments..."></textarea>
+                    <p class="text-xs text-gray-400 mt-1">Use bullet points separated by new lines</p>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-white" onclick="this.parentElement.parentElement.remove()">Remove</button>
+                </div>
+            `;
+        container.appendChild(newEntry);
+    });
+
+    document.getElementById('addLink').addEventListener('click', function () {
+        const container = document.getElementById('linksContainer');
+        const newEntry = document.createElement('div');
+        newEntry.className = 'link-entry grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border border-gray-700 rounded-md';
+        newEntry.innerHTML = `
+                <div>
+                    <label class="text-white block text-sm font-medium mb-1">Link Title</label>
+                    <input type="text" name="linkTitle" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Portfolio">
+                </div>
+                <div>
+                    <label class="text-white block text-sm font-medium mb-1">URL</label>
+                    <input type="url" name="linkUrl" class="text-white w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://devanchauhan.com">
+                </div>
+                <div class="md:col-span-2 flex justify-end">
+                    <button type="button" class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-white" onclick="this.parentElement.parentElement.remove()">Remove</button>
+                </div>
+            `;
+        container.appendChild(newEntry);
+    });
+
+
+    // Form submission
+    document.getElementById('resumeForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Collect form data
+        const formData = {
+            candidate: {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                linkedin: document.getElementById('linkedin').value,
+                github: document.getElementById('github').value,
+                education: [],
+                skills: [],
+                projects: [],
+                experience: [],
+                additional: []
+            },
+            job_description: {
+                title: document.getElementById('jobTitle').value,
+                company: document.getElementById('jobCompany').value,
+                location: document.getElementById('jobLocation').value,
+                requirements: []
+            },
+            links: {},
+            resume_type: {
+                type: 1
+            }
+        };
+
+        // Collect job requirements
+        const requirementInputs = document.querySelectorAll('input[name="requirement"]');
+        requirementInputs.forEach(input => {
+            const requirement = input.value.trim();
+            if (requirement) {
+                formData.job_description.requirements.push(requirement);
+            }
+        });
+
+        // Collect education data
+        const educationEntries = document.querySelectorAll('.education-entry');
+        educationEntries.forEach(entry => {
+            const degree = entry.querySelector('input[name="degree"]').value;
+            const university = entry.querySelector('input[name="university"]').value;
+            const year = entry.querySelector('input[name="year"]').value;
+            const cgpa = entry.querySelector('input[name="cgpa"]').value;
+
+            if (degree && university) {
+                formData.candidate.education.push({
+                    degree: degree,
+                    university: university,
+                    year: year,
+                    cgpa: cgpa
+                });
+            }
+        });
+
+        // Collect skills
+        const skillElements = document.querySelectorAll('#skillsList > div');
+        skillElements.forEach(skillElement => {
+            const skillText = skillElement.textContent.replace('×', '').trim();
+            if (skillText) {
+                formData.candidate.skills.push(skillText);
+            }
+        });
+
+        // Collect projects
+        const projectEntries = document.querySelectorAll('.project-entry');
+        projectEntries.forEach(entry => {
+            const title = entry.querySelector('input[name="projectTitle"]').value;
+            const description = entry.querySelector('textarea[name="projectDescription"]').value;
+            const link = entry.querySelector('input[name="projectLink"]').value;
+
+            if (title && description) {
+                formData.candidate.projects.push({
+                    title: title,
+                    description: description,
+                    link: link
+                });
+            }
+        });
+
+        // Collect experience
+        const experienceEntries = document.querySelectorAll('.experience-entry');
+        experienceEntries.forEach(entry => {
+            const role = entry.querySelector('input[name="role"]').value;
+            const company = entry.querySelector('input[name="company"]').value;
+            const duration = entry.querySelector('input[name="duration"]').value;
+            const workDescription = entry.querySelector('textarea[name="workDescription"]').value;
+
+            if (role && company) {
+                const workItems = workDescription.split('\n').filter(item => item.trim() !== '');
+
+                formData.candidate.experience.push({
+                    role: role,
+                    company: company,
+                    duration: duration,
+                    work: workItems
+                });
+            }
+        });
+
+        // Collect additional information
+        const additionalText = document.getElementById('additionalInfo').value;
+        if (additionalText) {
+            const additionalItems = additionalText.split('\n').filter(item => item.trim() !== '');
+            formData.candidate.additional = additionalItems;
+        }
+
+        // Collect links
+        const linkEntries = document.querySelectorAll('.link-entry');
+        linkEntries.forEach(entry => {
+            const name = entry.querySelector('input[name="linkTitle"]').value;
+            const url = entry.querySelector('input[name="linkUrl"]').value;
+
+            if (name && url) {
+                // Convert title to lowercase for consistent key naming
+                const key = name.toLowerCase();
+                formData.links[key] = url;
+            }
+        });
+
+        // Output the collected data (in a real app, you would send this to a server)
+        console.log('Form Data:', JSON.stringify(formData, null, 2));
+        generateResume(formData);
+    });
+
+    async function generateResume(req) {
+        showLoader();
+        const api = await fetch("/Dashboard/ResumeGen", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(req)
+        })
+
+        const data = await api.json();
+        console.log(data);
+
+        if (data.pdf_url) {
+            console.log(data);
+            showModal(data.pdf_url)
+        }
+        
+        hideLoader();
+
+    }
+</script>
