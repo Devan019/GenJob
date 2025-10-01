@@ -1,82 +1,57 @@
 {
+  "links": {
+    "linkedin": "https://www.linkedin.com/in/john-doe",
+    "github": "https://github.com/johndoe",
+    "portfolio": "https://johndoe.dev"
+  },
   "candidate": {
-    "name": "Rohan Mehta",
-    "email": "rohan.mehta@gmail.com",
-    "phone": "+91-9876543210",
-    "linkedin": "https://linkedin.com/in/rohanmehta",
-    "github": "https://github.com/rohanmehta",
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "phone": "+1234567890",
+    "linkedin": "https://www.linkedin.com/in/john-doe",
+    "github": "https://github.com/johndoe",
     "education": [
       {
-        "degree": "B.Tech in Computer Science",
-        "university": "IIT Delhi",
-        "year": "2020 - 2024",
-        "cgpa": "8.6/10"
+        "degree": "Bachelor of Science in Computer Science",
+        "university": "Example University",
+        "year": "2024",
+        "cgpa": 8.7
       }
     ],
     "skills": [
-      "Python",
-      "Java",
-      "JavaScript",
-      "React.js",
-      "Node.js",
-      "Spring Boot",
-      "SQL",
-      "MongoDB",
-      "Machine Learning",
-      "System Design",
-      "Data Structures & Algorithms"
+      "C#", "Python", "FastAPI", "React", "SQL"
     ],
     "projects": [
       {
-        "title": "AlgoAnims - Algorithm Visualizer",
-        "description": "Built an interactive platform using React and Express to visualize sorting, graph, and search algorithms with step-by-step animations.",
-        "link": "https://github.com/rohanmehta/algoanims"
-      },
-      {
-        "title": "Realtime Chat App",
-        "description": "Implemented a secure chat application with WebSockets, JWT authentication, and scalable backend using Spring Boot and Redis.",
-        "link": "https://github.com/rohanmehta/realtime-chat"
+        "title": "Resume Generator",
+        "description": "A web app to generate resumes dynamically from user data.",
+        "link": "https://github.com/johndoe/resume-generator"
       }
     ],
     "experience": [
       {
-        "role": "Software Engineering Intern",
-        "company": "Infosys",
-        "duration": "May 2023 - July 2023",
+        "role": "Software Engineer Intern",
+        "company": "TechCorp",
+        "duration": "Jun 2023 - Aug 2023",
         "work": [
-          "Designed and integrated REST APIs for client applications.",
-          "Optimized SQL queries with a 20% improvement in performance.",
-          "Collaborated with senior engineers to implement coding best practices."
-        ]
-      },
-      {
-        "role": "Backend Developer Intern",
-        "company": "PayPal",
-        "duration": "Jan 2024 - June 2024",
-        "work": [
-          "Built scalable microservices using Spring Boot and Docker for payment workflows.",
-          "Implemented Redis caching, improving transaction processing speed by 35%.",
-          "Enhanced fraud detection algorithms by integrating ML models into real-time pipelines.",
-          "Worked closely with global PayPal engineering teams on distributed systems at scale."
+          "Developed backend APIs using FastAPI.",
+          "Integrated with React frontend to create dynamic dashboards."
         ]
       }
     ],
     "additional": [
-      "Winner, Smart India Hackathon 2023",
-      "LeetCode Rating: 2000+ (Top 5%)",
-      "Organized 'Winter Tech Break' workshop on scalable systems (Kafka, Redis, Load Balancing)."
+      "Certified AWS Solutions Architect",
+      "Member of University Coding Club"
     ]
   },
-  "company": {
-    "title": "Software Engineer",
-    "company": "PayPal",
-    "location": "Bangalore, India",
+  "job_description": {
+    "title": "Backend Developer",
+    "company": "TechCorp",
+    "location": "Remote",
     "requirements": [
-      "Strong proficiency in Java, Spring Boot, and distributed systems.",
-      "Experience with microservices, Docker, and cloud-native development.",
-      "Knowledge of databases (SQL, NoSQL) and caching technologies (Redis, Memcached).",
-      "Ability to write clean, scalable code and optimize system performance.",
-      "Good understanding of payment systems, security, and fraud prevention."
+      "Experience with FastAPI and REST APIs",
+      "Proficiency in Python and C#",
+      "Familiarity with database design and SQL"
     ]
   }
 }

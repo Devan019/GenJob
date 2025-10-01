@@ -1,10 +1,10 @@
 
-from typing import List, Optional
+from typing import Dict, List, Optional, Union
 from fastapi import FastAPI
 from pydantic import BaseModel
 import json
 app = FastAPI()
-
+import urllib.parse
 from helpers.salary_prediciton import getOtherData, getSalaryPrediction, getCompanies
 from helpers.job_analisys import getGraphData
 from helpers.gen_latex import generate_latex
@@ -12,7 +12,7 @@ class EducationItem(BaseModel):
     degree: str
     university: str
     year: str
-    cgpa: Optional[str] = None
+    cgpa: Optional[Union[str, float]] = None
 
 
 class ProjectItem(BaseModel):
@@ -48,19 +48,14 @@ class JobDescription(BaseModel):
     location: Optional[str] = None
     requirements: List[str]
 
+class ResumeType(BaseModel):
+    type: int
 
-@app.post("/generate_latex_snippet/")
-def genLatexCode(candidate: Candidate, job_description: JobDescription):
-    from helpers.gen_latex import generate_latex
-    latex_code = generate_latex(
-        education=candidate.education,
-        skills=candidate.skills,
-        experience=candidate.experience,
-        projects=candidate.projects,
-        additional=candidate.additional,
-        company_details=job_description.dict()
-    )
-    return {"latex_code": latex_code}
+
+class ResumeGenRequest(BaseModel):
+    links: Dict[str, str]
+    candidate: Candidate
+    job_description: JobDescription
 
 
 class dataItem(BaseModel):
@@ -73,50 +68,124 @@ def jsonConverter(itme: dataItem):
     return json.loads(itme.data)
 
 
-@app.post("/generate_latex/")
-def genWholeLatex(
-    candidate: Candidate, 
-    job_description: JobDescription, 
-    links: dict,
-    resume_type: int
-):
-    
 
+def clean_latex_content(text: str) -> str:
+    """Clean LaTeX content to remove problematic Unicode characters"""
+    # Replace common Unicode characters with ASCII equivalents
+    replacements = {
+        '\u2011': '-',  # non-breaking hyphen to regular hyphen
+        '\u2013': '-',  # en dash to hyphen
+        '\u2014': '-',  # em dash to hyphen
+        '\u2018': "'",  # left single quote
+        '\u2019': "'",  # right single quote
+        '\u201c': '"',  # left double quote
+        '\u201d': '"',  # right double quote
+        '\u2022': '*',  # bullet point
+    }
+    
+    for unicode_char, ascii_char in replacements.items():
+        text = text.replace(unicode_char, ascii_char)
+    
+    return text
+
+def convert_latex_to_pdf(latex_content: str) -> str:
+    """
+    Convert LaTeX content to PDF using latexonline.cc
+    Returns the URL to the compiled PDF
+    """
+    try:
+        # URL encode the LaTeX content
+        encoded_latex = urllib.parse.quote(latex_content)
+        
+        # Construct the latexonline.cc URL
+        latexonline_url = f"https://latexonline.cc/compile?text={encoded_latex}"
+        
+        return latexonline_url
+        
+    except Exception as e:
+        print(f"Error converting LaTeX to PDF: {e}")
+        return None
+
+@app.post("/generate_resume")
+def genWholeLatex(
+    request: ResumeGenRequest
+):
+    resume_type = 2
+    print("Generating LaTeX code...", request)
     latex_code = generate_latex(
-        education=candidate.education,
-        skills=candidate.skills,
-        experience=candidate.experience,
-        projects=candidate.projects,
-        additional=candidate.additional,
-        company_details=job_description.dict()
+        education=request.candidate.education,
+        skills=request.candidate.skills,
+        experience=request.candidate.experience,
+        projects=request.candidate.projects,
+        additional=request.candidate.additional,
+        company_details=request.job_description.dict(),
+        resume_type=resume_type
     )
-    json_code = json.loads(latex_code)
+    # print("Received LaTeX code from generator", latex_code)
+    
+    try:
+        json_code = json.loads(latex_code)
+    except json.JSONDecodeError as e:
+        print(f"JSON parsing error: {e}")
+        print(f"Raw response: {latex_code}")
+        return {"error": "Failed to generate LaTeX content"}
+
+    # Clean each section to remove Unicode characters
+    for key in json_code:
+        if isinstance(json_code[key], str):
+            json_code[key] = clean_latex_content(json_code[key])
 
     # Build LaTeX links dynamically
-    links_latex = " \,|\, ".join([rf"\href{{{url}}}{{{name}}}" for name, url in (links or {}).items()])
+    links_dict = request.links or {}
+    links_latex = " \\,|\\, ".join([rf"\href{{{url}}}{{{name}}}" for name, url in links_dict.items()])
 
-    # Horizontal layout (type=1)
+    # Horizontal layout (type=1) - Two columns
     if resume_type == 1:
         header_block = rf"""
 \begin{{center}}
-    {{\LARGE \textbf{{ {candidate.name} }}}} \\[2pt]
-    \href{{mailto:{candidate.email}}}{{{candidate.email}}} \,|\, {candidate.phone} \,|\, {links_latex}
+    {{\LARGE \textbf{{ {request.candidate.name} }}}} \\[2pt]
+    \href{{mailto:{request.candidate.email}}}{{{request.candidate.email}}} \\,|\\, {request.candidate.phone} \\,|\\, {links_latex}
 \end{{center}}
 \vspace{{4pt}}
 """
-    # Vertical layout (type=2)
+        # Two-column layout for horizontal resume
+        template = rf"""\documentclass[12pt]{{article}}
+\usepackage[margin=0.7in]{{geometry}}
+\usepackage{{helvet}}
+\renewcommand{{\familydefault}}{{\sfdefault}}
+\usepackage{{enumitem}}
+\setlist[itemize]{{leftmargin=*,noitemsep,topsep=0pt}}
+\usepackage[hidelinks]{{hyperref}}
+\usepackage{{paracol}}
+\pagenumbering{{gobble}}
+\linespread{{1.1}}
+
+\begin{{document}}
+{header_block}
+\begin{{paracol}}{{2}}
+{json_code.get("education", "")}
+{json_code.get("skills", "")}
+\switchcolumn
+{json_code.get("experience", "")}
+{json_code.get("projects", "")}
+\end{{paracol}}
+{json_code.get("additional", "")}
+\end{{document}}
+"""
+    
+    # Vertical layout (type=2) - Single column
     else:
         header_block = rf"""
 \begin{{center}}
-    {{\LARGE \textbf{{ {candidate.name} }}}} \\[4pt]
-    \href{{mailto:{candidate.email}}}{{{candidate.email}}} \\[2pt]
-    {candidate.phone} \\[2pt]
+    {{\LARGE \textbf{{ {request.candidate.name} }}}} \\[4pt]
+    \href{{mailto:{request.candidate.email}}}{{{request.candidate.email}}} \\[2pt]
+    {request.candidate.phone} \\[2pt]
     {links_latex}
 \end{{center}}
 \vspace{{4pt}}
 """
-
-    template = rf"""\documentclass[10pt]{{article}}
+        # Single column layout for vertical resume
+        template = rf"""\documentclass[12pt]{{article}}
 \usepackage[margin=0.7in]{{geometry}}
 \usepackage{{helvet}}
 \renewcommand{{\familydefault}}{{\sfdefault}}
@@ -128,19 +197,25 @@ def genWholeLatex(
 
 \begin{{document}}
 {header_block}
-{json_code["education"]}
-{json_code["skills"]}
-{json_code["experience"]}
-{json_code["projects"]}
-{json_code["additional"]}
+{json_code.get("education", "")}
+{json_code.get("skills", "")}
+{json_code.get("experience", "")}
+{json_code.get("projects", "")}
+{json_code.get("additional", "")}
 \end{{document}}
 """
 
-    with open("resume.tex", "w") as f:
-        f.write(template)
+    # Clean the final template
+    template = clean_latex_content(template)
+    
+    print("Generated LaTeX code")
 
-    return {"latex_code": template}
 
+    pdf_url = convert_latex_to_pdf(template)
+    
+    return {
+        "pdf_url": pdf_url,
+    }
 @app.post("/string-process")
 def process_string(item: dataItem):
     latex_text = item.data
@@ -188,6 +263,16 @@ def predictSalary(data: PredictSalaryModel):
 def graphData():
     obj = getGraphData()
     return obj
+
+@app.post("/test")
+def TestGen(
+    request: ResumeGenRequest
+):
+    return {
+        "candidate" : request.candidate,
+        "job" : request.job_description,
+        "links" : request.links
+    }
     
 
 if __name__ == "__main__":

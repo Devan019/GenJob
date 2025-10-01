@@ -5,3 +5,5 @@ groq
 pandas
 scikit-learn
 numpy
+cloudinary
+pylatex

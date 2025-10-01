@@ -80,10 +80,10 @@ app.UseAuthentication();  // MUST be before Authorization
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "dashboard",
-    pattern: "dashboard/ats",
-    defaults: new { controller = "ATS", action = "Index" });
+// app.MapControllerRoute(
+//     name: "dashboard",
+//     pattern: "dashboard/ats",
+//     defaults: new { controller = "ATS", action = "Index" });
 
 
 app.MapControllerRoute(

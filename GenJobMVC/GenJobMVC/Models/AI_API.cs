@@ -13,4 +13,8 @@ public class EndPoints
     public string GetCompanies { get; set; }
     
     public string JobRolesAnalysis { get; set; }
+    
+    public string Test { get; set; }
+    
+    public string ResumeGen { get; set; }
 }

@@ -113,10 +113,11 @@ namespace GenJobMVC.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    var viewModel = JsonSerializer.Deserialize<JobAnalysisViewModel>(jsonString, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
+                    var viewModel = JsonSerializer.Deserialize<JobAnalysisViewModel>(jsonString,
+                        new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
 
                     // Calculate summary values
                     if (viewModel != null)
@@ -161,6 +162,22 @@ namespace GenJobMVC.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet]
+        public IActionResult ResumeGen()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ResumeGen([FromBody] ResumeGenRequest req)
+        {
+            var response = await _httpClient.PostAsJsonAsync(_aiApi.Base + _aiApi.EndPoints.ResumeGen, req);
+            var data = await response.Content.ReadAsStringAsync();
+            return Content(data, "application/json");
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -175,10 +192,65 @@ public class CompanyRequest
     public string company_name { get; set; }
 }
 
+
 public class PredictRequest
 {
     public string company_name { get; set; }
     public string job_role { get; set; }
     public string location { get; set; }
     public string status { get; set; }
+}
+
+
+public class ResumeGenRequest
+{
+    public Dictionary<string, string> links { get; set; } = new Dictionary<string, string>();
+    public Candidate candidate { get; set; } = new Candidate();
+    public JobDescription job_description { get; set; } = new JobDescription();
+}
+
+public class Candidate
+{
+    public string name { get; set; } = "";
+    public string email { get; set; } = "";
+    public string phone { get; set; } = "";
+    public string linkedin { get; set; } = "";
+    public string github { get; set; } = "";
+
+    public List<Education2> education { get; set; } = new List<Education2>();
+    public List<string> skills { get; set; } = new List<string>();
+    public List<Project> projects { get; set; } = new List<Project>();
+    public List<Experience> experience { get; set; } = new List<Experience>();
+    public List<string> additional { get; set; } = new List<string>();
+}
+
+public class Education2
+{
+    public string degree { get; set; } = "";
+    public string university { get; set; } = "";
+    public string year { get; set; } = "";
+    public double? cgpa { get; set; } = null; // nullable to match optional in FastAPI
+}
+
+public class Project
+{
+    public string title { get; set; } = "";
+    public string description { get; set; } = "";
+    public string? link { get; set; } = null;
+}
+
+public class Experience
+{
+    public string role { get; set; } = "";
+    public string company { get; set; } = "";
+    public string duration { get; set; } = "";
+    public List<string> work { get; set; } = new List<string>();
+}
+
+public class JobDescription
+{
+    public string title { get; set; } = "";
+    public string company { get; set; } = "";
+    public string? location { get; set; } = null; // optional
+    public List<string> requirements { get; set; } = new List<string>();
 }
