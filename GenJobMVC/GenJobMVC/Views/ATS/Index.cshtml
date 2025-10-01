@@ -1,0 +1,91 @@
+@model GenJobMVC.Models.ATSAnalysisModel
+@{
+    ViewData["Title"] = "ATS Resume Analyzer";
+}
+
+<div class="min-h-screen bg-gray-900 p-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-t-lg">
+                <h3 class="text-2xl font-bold flex items-center">
+                    <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm2 6a2 2 0 114 0 2 2 0 01-4 0zm8 0a2 2 0 114 0 2 2 0 01-4 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    ATS Resume Analyzer
+                </h3>
+                <p class="text-blue-100 mt-2">Upload your resume and job description to get an ATS compatibility score</p>
+            </div>
+            <div class="p-6">
+                <form asp-action="AnalyzeResume" method="post" enctype="multipart/form-data" id="atsForm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label asp-for="ResumeFile" class="block text-sm font-medium text-gray-700 mb-2">Upload Resume (PDF, DOCX)</label>
+                            <input asp-for="ResumeFile" type="file" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" accept=".pdf,.docx" />
+                            <small class="text-gray-500 text-sm">Supported formats: PDF, DOCX</small>
+                        </div>
+                        <div>
+                            <label asp-for="CompanyName" class="block text-sm font-medium text-gray-700 mb-2">Company Name (Optional)</label>
+                            <input asp-for="CompanyName" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Microsoft, Google" />
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label asp-for="JobDescription" class="block text-sm font-medium text-gray-700 mb-2">Job Description *</label>
+                        <textarea asp-for="JobDescription" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" rows="8" 
+                            placeholder="Paste the job description here..."></textarea>
+                        <span asp-validation-for="JobDescription" class="text-red-500 text-sm"></span>
+                    </div>
+
+
+                    <div class="flex justify-center">
+                        <button type="submit" class="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="analyzeBtn">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                            </svg>
+                            Analyze Resume
+                        </button>
+                    </div>
+                </form>
+
+
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="text-center mt-8" style="display: none;">
+                    <div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-blue-500 hover:bg-blue-400 transition ease-in-out duration-150 cursor-not-allowed">
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Analyzing your resume...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Fallback if jQuery is not available
+        if (typeof $ === 'undefined') {
+            console.error('jQuery is not loaded. Please check the layout file.');
+        }
+        
+        $(document).ready(function() {
+            console.log('ATS JavaScript loaded successfully');
+            
+            // Handle form submission
+            $('#atsForm').on('submit', function(e) {
+                console.log('Form submitted');
+                
+                // Show loading spinner
+                $('#loadingSpinner').show();
+                $('#analyzeBtn').prop('disabled', true);
+                
+                // Let the form submit normally - this will redirect to the Results view
+                // The loading spinner will be shown until the page redirects
+                return true;
+            });
+
+        });
+    </script>
+}
