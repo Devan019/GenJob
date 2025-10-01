@@ -1,10 +1,14 @@
 using GenJobMVC.Data.MyAuthMySQL.Data;
 using GenJobMVC.Models;
+using GenJobMVC.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Redis.OM;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Load environment variables from .env file if it exists
+DotNetEnv.Env.Load();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -42,6 +46,21 @@ var redisConnectionString = builder.Configuration["REDIS_CONNECTION_STRING"];
 builder.Services.AddSingleton(new RedisConnectionProvider(redisConnectionString));
 builder.Services.AddHostedService<IndexCreationService>();
 builder.Services.Configure<AI_API>(builder.Configuration.GetSection("AI_API"));
+// Register ATS configuration
+builder.Services.AddSingleton(ATSConfiguration.LoadFromEnvironment());
+
+// Register ATS services
+builder.Services.AddScoped<GenJobMVC.Services.IResumeParserService, GenJobMVC.Services.ResumeParserService>();
+builder.Services.AddScoped<GenJobMVC.Services.IATSScoringService, GenJobMVC.Services.ATSScoringService>();
+builder.Services.AddScoped<GenJobMVC.Services.IRealATSService, GenJobMVC.Services.RealATSService>();
+
+builder.Services.AddHttpClient<GenJobMVC.Services.RealATSService>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
+    client.DefaultRequestHeaders.Add("User-Agent", "GenJob-ATS/1.0");
+});
+
+
 
 var app = builder.Build();
 
@@ -60,6 +79,12 @@ app.UseRouting();
 app.UseAuthentication();  // MUST be before Authorization
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "dashboard",
+    pattern: "dashboard/ats",
+    defaults: new { controller = "ATS", action = "Index" });
+
 
 app.MapControllerRoute(
     name: "default",
