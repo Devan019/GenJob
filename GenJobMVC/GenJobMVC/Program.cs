@@ -4,6 +4,7 @@ using GenJobMVC.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Redis.OM;
+using GenJobMVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages(); // Needed for Identity UIs
 
 builder.Services.AddHttpClient();  //for make apis
+
+builder.Services.AddHttpClient<JobPostingService>(); // injects HttpClient automatically
 
 //for redis
 var redisConnectionString = builder.Configuration["REDIS_CONNECTION_STRING"];

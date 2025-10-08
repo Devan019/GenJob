@@ -1,0 +1,179 @@
+﻿@model GenJobMVC.Models.DashboardViewModel
+@{
+    ViewBag.Title = "Job & Company Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="min-h-screen bg-gray-900 text-white p-6">
+    <h1 class="text-4xl font-bold text-blue-400 mb-6 text-center">Job & Company Explorer</h1>
+
+    <!-- Display Errors -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="bg-red-900 border border-red-600 text-red-200 p-4 rounded-lg mb-6">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p>⚠️ @error.ErrorMessage</p>
+            }
+        </div>
+    }
+
+    <!-- Search Forms -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Job Search -->
+        <form method="post" action="@Url.Action("SearchJobs", "JobPosting")" class="bg-gray-800 p-6 rounded-2xl shadow-lg">
+            @Html.AntiForgeryToken()
+            <h2 class="text-2xl font-semibold text-blue-300 mb-4">Search Jobs</h2>
+            <input type="text" name="jobQuery" id="jobQuery" placeholder="Job title or keyword" required
+                   class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3" />
+            <input type="text" name="location" required id="location" placeholder="Location"
+                   class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3" />
+            <button type="submit" class="w-full mt-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold p-3 rounded-lg transition duration-200">
+                Search Jobs
+            </button>
+        </form>
+
+        <!-- Company Search -->
+        <form method="post" action="@Url.Action("SearchCompanies", "JobPosting")" class="bg-gray-800 p-6 rounded-2xl shadow-lg">
+            @Html.AntiForgeryToken()
+            <h2 class="text-2xl font-semibold text-blue-300 mb-4">Search Companies</h2>
+            <input type="text" name="companyName" id="companyName" placeholder="Company name" required
+                   class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3" />
+            <button type="submit" class="w-full mt-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold p-3 rounded-lg transition duration-200">
+                Search Companies
+            </button>
+        </form>
+    </div>
+
+    <!-- Job Results -->
+    @if (Model?.Jobs != null && Model.Jobs.Any())
+    {
+        <h2 class="text-3xl font-bold text-blue-400 mb-4">Job Results (@Model.Jobs.Count found)</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            @foreach (var job in Model.Jobs)
+            {
+                <div class="bg-gray-800 rounded-2xl p-5 shadow-lg hover:shadow-xl transition duration-200 flex flex-col h-full">
+                    <div class="flex items-center mb-4">
+                        @if (!string.IsNullOrEmpty(job.CompanyLogo))
+                        {
+                            <img src="@job.CompanyLogo" alt="@job.CompanyName"
+                                 onerror="this.src='/placeholder.svg'"
+                                 class="w-12 h-12 object-contain rounded-full mr-3 bg-white p-1" />
+                        }
+                        else
+                        {
+                            <div class="w-12 h-12 rounded-full mr-3 bg-gray-700 flex items-center justify-center">
+                                <span class="text-gray-400 text-xl">🏢</span>
+                            </div>
+                        }
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold text-white">@job.JobTitle</h3>
+                            <p class="text-gray-400">@job.CompanyName</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-2">
+                        <span class="font-semibold text-blue-300">📍 Location:</span> @job.LocationName
+                    </p>
+                    @if (job.SalaryMin.HasValue && job.SalaryMax.HasValue)
+                    {
+                        <p class="text-gray-300 mb-2">
+                            <span class="font-semibold text-green-300">💰 Salary:</span>
+                            @job.SalaryCurrency @job.SalaryMin?.ToString("N0") - @job.SalaryMax?.ToString("N0")
+                            @(!string.IsNullOrEmpty(job.SalaryPeriod) ? $"/ {job.SalaryPeriod}" : "")
+                        </p>
+                    }
+                    <p class="text-gray-400 mb-4 text-sm">
+                        <span class="font-semibold">⏱️ Posted:</span> @job.AgeInDays day@(job.AgeInDays != 1 ? "s" : "") ago
+                    </p>
+                    <a href="@job.JobLink" target="_blank" rel="noopener noreferrer"
+                       class="mt-auto inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold p-2 rounded-lg text-center transition duration-200">
+                        View Job Details →
+                    </a>
+                </div>
+            }
+        </div>
+    }
+    else if (ViewBag.SearchPerformed == true && ViewBag.SearchType == "Jobs")
+    {
+        <div class="bg-yellow-900 border border-yellow-600 text-yellow-200 p-4 rounded-lg mb-8">
+            <p class="font-semibold">No jobs found matching your search criteria. Try different keywords or location.</p>
+        </div>
+    }
+
+    <!-- Company Results -->
+    @if (Model?.Companies != null && Model.Companies.Any())
+    {
+        <h2 class="text-3xl font-bold text-blue-400 mb-4">Company Results (@Model.Companies.Count found)</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var company in Model.Companies)
+            {
+                <div class="bg-gray-800 rounded-2xl p-5 shadow-lg hover:shadow-xl transition duration-200 flex flex-col h-full">
+                    <div class="flex items-center mb-4">
+                        @if (!string.IsNullOrEmpty(company.Logo))
+                        {
+                            <img src="@company.Logo" alt="@company.Name"
+                                 onerror="this.src='/placeholder.svg'"
+                                 class="w-12 h-12 object-contain rounded-full mr-3 bg-white p-1" />
+                        }
+                        else
+                        {
+                            <div class="w-12 h-12 rounded-full mr-3 bg-gray-700 flex items-center justify-center">
+                                <span class="text-gray-400 text-xl">🏢</span>
+                            </div>
+                        }
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold text-white">@company.Name</h3>
+                            <p class="text-gray-400">@company.Industry</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-2">
+                        <span class="font-semibold text-blue-300">📍 HQ:</span> @company.HeadquartersLocation
+                    </p>
+                    @if (company.Rating.HasValue)
+                    {
+                        <p class="text-gray-300 mb-2">
+                            <span class="font-semibold text-yellow-300">⭐ Rating:</span>
+                            @company.Rating.Value.ToString("N1") / 5.0
+                        </p>
+                    }
+                    @if (company.JobCount.HasValue)
+                    {
+                        <p class="text-gray-300 mb-4">
+                            <span class="font-semibold text-green-300">💼 Open Jobs:</span> @company.JobCount
+                        </p>
+                    }
+                    <a href="@company.CompanyLink" target="_blank" rel="noopener noreferrer"
+                       class="mt-auto inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold p-2 rounded-lg text-center transition duration-200">
+                        View Company Profile →
+                    </a>
+                </div>
+            }
+        </div>
+    }
+    else if (ViewBag.SearchPerformed == true && ViewBag.SearchType == "Companies")
+    {
+        <div class="bg-yellow-900 border border-yellow-600 text-yellow-200 p-4 rounded-lg mb-8">
+            <p class="font-semibold">No companies found matching your search criteria. Try a different company name.</p>
+        </div>
+    }
+
+    @if ((Model?.Jobs == null || !Model.Jobs.Any()) && (Model?.Companies == null || !Model.Companies.Any()) && ViewBag.SearchPerformed != true)
+    {
+        <div class="text-center mt-16">
+            <div class="text-6xl mb-4">🔍</div>
+            <p class="text-gray-400 text-lg">Start by searching for jobs or companies above</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        console.log('Dashboard loaded');
+        console.log('Model Jobs:', @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Jobs )));
+        console.log('Model Companies:', @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Companies )));
+        console.log('Search Performed:', '@ViewBag.SearchPerformed');
+        console.log('Search Type:', '@ViewBag.SearchType');
+    </script>
+}
