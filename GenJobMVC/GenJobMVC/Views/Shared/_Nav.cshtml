@@ -2,9 +2,8 @@
   <div class="px-4 py-6 mx-auto lg:py-8 sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
     <div class="relative flex items-center justify-between lg:justify-center lg:space-x-16">
       <ul class="flex items-center hidden space-x-8 lg:flex">
-        <li><a href="/" aria-label="Our product" title="Our product" class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-accent-400">Product</a></li>
-        <li><a href="/" aria-label="Our product" title="Our product" class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-accent-400">Features</a></li>
-        <li><a href="/" aria-label="Product pricing" title="Product pricing" class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-accent-400">Pricing</a></li>
+        <li><a href="#features" aria-label="Our product" title="Our product" class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-accent-400">Features</a></li>
+        <li><a href="#contact" aria-label="Product pricing" title="Product pricing" class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-accent-400">Contact</a></li>
       </ul>
       <a href="/" aria-label="Company" title="Company" class="inline-flex items-center">
         <svg class="w-8 text-teal-accent-400" viewBox="0 0 24 24" stroke-linejoin="round" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" stroke="currentColor" fill="none">
@@ -20,9 +19,14 @@
                 {
                     <!-- When logged in -->
                     <li>
-                        <span class="font-medium tracking-wide text-gray-100">
-                            Hello, @User.Identity.Name
-                        </span>
+                      <span class="font-medium tracking-wide text-gray-100">
+                        Hello, @User.Identity.Name
+                      </span>
+                    </li>
+                    <li>
+                      <span class="font-medium tracking-wide text-gray-100">
+                        <a asp-controller="ATS" asp-action="Index" > Dashboard </a>
+                      </span>
                     </li>
                     <li>
                         <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
@@ -36,12 +40,6 @@
                 else
                 {
                     <!-- When NOT logged in -->
-                    <li>
-                        <a asp-controller="Home" asp-action="About"
-                           class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-400">
-                            About us
-                        </a>
-                    </li>
                     <li>
                         <a asp-controller="Account" asp-action="Login"
                            class="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-400">

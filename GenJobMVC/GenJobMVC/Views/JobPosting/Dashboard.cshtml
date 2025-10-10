@@ -1,9 +1,10 @@
 ﻿@model GenJobMVC.Models.DashboardViewModel
-@{
-    ViewBag.Title = "Job & Company Dashboard";
-    Layout = "_Layout";
-}
-
+@* @{ *@
+@*     ViewBag.Title = "Job & Company Dashboard"; *@
+@*     Layout = "_Layout"; *@
+@* } *@
+@Html.Partial("_Nav")
+@Html.Partial("_Sidebar")
 <div class="min-h-screen bg-gray-900 text-white p-6">
     <h1 class="text-4xl font-bold text-blue-400 mb-6 text-center">Job & Company Explorer</h1>
 
@@ -169,11 +170,11 @@
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
-        console.log('Dashboard loaded');
-        console.log('Model Jobs:', @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Jobs )));
-        console.log('Model Companies:', @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Companies )));
-        console.log('Search Performed:', '@ViewBag.SearchPerformed');
-        console.log('Search Type:', '@ViewBag.SearchType');
-    </script>
+    @* <script type="text/javascript"> *@
+    @*     console.log('Dashboard loaded'); *@
+    @*     console.log('Model Jobs:', @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Jobs ))); *@
+    @*     console.log('Model Companies:', @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Companies ))); *@
+    @*     console.log('Search Performed:', '@ViewBag.SearchPerformed'); *@
+    @*     console.log('Search Type:', '@ViewBag.SearchType'); *@
+    @* </script> *@
 }
