@@ -2,6 +2,21 @@
 
 This repository contains two main components: an `ai-apis` microservice that provides AI-powered resume generation, salary prediction, and job analysis utilities; and `GenJobMVC`, an ASP.NET MVC web application that integrates those AI services into a web UI for employers and job seekers.
 
+## 🔗 Quick Navigation
+
+| Section | Description |
+|---------|-------------|
+| [📁 Contents](#contents) | Project structure overview |
+| [✨ Features](#project-features) | Key capabilities and functionality |
+| [🛠️ Tech Stack](#tech-stack) | Technologies and frameworks used |
+| [📂 Folder Structure](#folder-structure-short) | Detailed directory organization |
+| [🔄 Architecture Flow](#high-level-flow) | System architecture diagram |
+| [🔌 API Endpoints](#ai-apis-api-endpoints-and-example-return-objects) | Available API endpoints and responses |
+| [🌐 External APIs](#external-api-integrations) | Third-party service integrations |
+| [🚀 Installation & Setup](#how-to-run) | Prerequisites and running instructions |
+| [👥 Contributors](#individual-contributors) | Team members and roles |
+| [📝 Notes](#notes-and-assumptions) | Additional information and assumptions |
+
 ## Contents
 - `ai-apis/` — Python FastAPI microservice providing AI helpers (resume LaTeX generation, salary prediction, job analysis, PDF conversion helper).
 - `GenJobMVC/` — ASP.NET MVC web app (C#) that uses the microservice and provides UI pages (Dashboard, ATS, Resume generation, Salary prediction).
@@ -215,7 +230,7 @@ dotnet ef database update
 dotnet run
 ```
 
-**individual contributors:**
+## Individual Contributors
 - Devan Chauhan (https://github.com/Devan019)
 	- .net REST Apis
 	- ML prediction model/data analysis
@@ -237,11 +252,4 @@ dotnet run
 
 - The README API docs are derived from `ai-apis/api.py` and helper names; exact response structures from helpers (e.g., `getOtherData`, `getGraphData`) depend on their implementations under `ai-apis/helpers`.
 - The project uses `latexonline.cc` for LaTeX compilation by building a URL with the encoded LaTeX content. For production usage consider a private LaTeX build service or a server-side container to compile PDFs more securely.
-
----
-
-If you want, I can:
-- Add a dedicated `ai-apis/README.md` with detailed examples and curl/HTTPie calls.
-- Create Postman collection or OpenAPI (FastAPI already provides /docs and /openapi.json).
-- Add a small example script that calls `/generate_resume` with a sample payload and saves the returned PDF URL.
 
