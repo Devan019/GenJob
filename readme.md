@@ -8,25 +8,51 @@ This repository contains two main components: an `ai-apis` microservice that pro
 
 ## Project features
 
-- Resume generation (LaTeX) from structured candidate data and job description.
-- Convert generated LaTeX to a PDF URL (uses latexonline.cc by default).
-- Salary prediction for job roles by company, location and employment status.
-- Job/role analytics and graph data for visualizations in the MVC app.
-- Simple APIs to convert JSON strings and process LaTeX text.
+- **AI-powered Resume Generation**: Generate professional LaTeX-based resumes from structured candidate data and job descriptions using AI models (oss-120b).
+- **PDF Conversion**: Convert generated LaTeX to downloadable PDF URLs via latexonline.cc.
+- **ATS Score Analysis**: Extract text from PDF/DOC resumes using iTextSharp/OpenXML and calculate ATS compatibility scores.
+- **Salary Prediction**: ML-based salary prediction for job roles by company, location, and employment status with Redis caching.
+- **Job Market Analytics**: Generate graph data and visualizations for job market trends and analysis.
+- **User Authentication**: Secure login/signup system using ASP.NET Identity with MySQL database.
+- **Job Search Integration**: Search job postings by role, location, and company via Glassdoor API integration.
+- **Data Caching**: Redis-based caching for improved performance and data storage.
+- **Resume Parsing**: Extract and process resume content from various document formats.
 
 ## Tech stack
 
-- ai-apis:
-	- Python 3.10+
-	- FastAPI for API endpoints
-	- Pydantic for request validation
-	- Helper scripts for ML/model inference (scikit-learn used in pre-trained model files)
-	- latexonline.cc for LaTeX -> PDF compilation (URL-based)
-- GenJobMVC:
-	- .NET 8.0 (ASP.NET Core MVC)
-	- C# for controllers, services and models
-	- Entity Framework Core for data access/migrations
-	- Razor views for UI
+**Libaries/Frameworks**
+- Frontend: HTML, Tailwind-CSS, JavaScript, Razor views
+- Backend: C#, .net core and it's packages
+- AI/ML : python, fastapis
+
+**ai-apis (Python Backend):**
+- Python 3.10+
+- FastAPI for REST API endpoints
+- Pydantic for request/response validation
+- Redis for caching and data storage
+- scikit-learn for ML model inference
+- Pre-trained ML models (salary prediction)
+- oss-120b model for AI-powered content generation
+- latexonline.cc for LaTeX → PDF compilation
+
+**GenJobMVC (C# Web Application):**
+- .NET 8.0 (ASP.NET Core MVC)
+- Entity Framework Core for ORM and migrations
+- MySQL database for persistent data storage
+- ASP.NET Identity for authentication and user management
+- iTextSharp for PDF text extraction
+- OpenXML for document processing
+- Redis.OM for Redis integration in .NET
+- Razor views for server-side rendering
+- Glassdoor API integration for job search
+
+**Key .NET Packages:**
+- `Microsoft.EntityFrameworkCore`
+- `Pomelo.EntityFrameworkCore.MySql`
+- `Microsoft.AspNetCore.Identity.EntityFrameworkCore`
+- `Redis.OM`
+- `iTextSharp`
+- `DocumentFormat.OpenXml`
 
 ## Folder structure (short)
 
@@ -52,21 +78,12 @@ GenJobMVC/
 - Views/ — Razor views for pages (Dashboard, ATS, Account, JobPosting)
 - wwwroot/ — static assets (css, js, lib)
 
-## High-level flow (Mermaid)
+## High-level flow
 
-The following Mermaid diagram shows a simplified request flow between the web UI, the MVC backend, and the `ai-apis` microservice. It can be rendered by any tool that supports Mermaid (GitHub, VS Code Mermaid preview, Mermaid Live Editor).
+The following diagram shows the complete architecture and data flow between all system components including the web UI, ASP.NET MVC backend, FastAPI, databases, and external APIs.
 
-```mermaid
-flowchart LR
-	UI[User (browser)] -->|Forms / Clicks| MVC[GenJobMVC (ASP.NET MVC)]
-	MVC -->|calls REST| AIAPI[ai-apis (FastAPI)]
-	AIAPI -->|generate_resume| LaTeXGen[gen_latex.py]
-	LaTeXGen -->|returns JSON sections| AIAPI
-	AIAPI -->|convert to PDF URL| latexonline[latexonline.cc]
-	AIAPI -->|predict-salary| SalaryModel[pre_trained/salary_2022 model]
-	AIAPI -->|graph data| JobAnalysis[job_analisys.py]
-	MVC -->|renders view with results| UI
-```
+<img src="./Genjob flow.png" alt="Logo"/>
+
 
 ## ai-apis API endpoints and example return objects
 
@@ -129,23 +146,93 @@ Example response object:
 - Request body: ResumeGenRequest
 - Response: { "candidate": <candidate-object>, "job": <job_description>, "links": <links> }
 
+## External API integrations
 
-## How to run (short)
+**Glassdoor API (via GenJobMVC):**
+- Search jobs by role and location
+- Search jobs by company name
+- Retrieve job posting data including salary ranges, company info, and requirements
 
-ai-apis (Python)
+**oss-120b AI Model:**
+- Used for intelligent resume generation and content optimization
+- Integrated through the ai-apis service
 
-- Create a virtual environment and install dependencies from `ai-apis/requirements.txt`.
-- Run the service with uvicorn:
+**latexonline.cc API:**
+- Converts LaTeX markup to downloadable PDF URLs
+- No authentication required, public service
 
+
+## How to run
+
+### Prerequisites
+**Install Redis Stack:**
 ```powershell
-cd "d:\C-drive mini\GenJob\ai-apis"
-python -m venv .venv; .\.venv\Scripts\Activate.ps1; pip install -r requirements.txt; uvicorn api:app --reload --port 8000
+# Windows (using Chocolatey)
+choco install redis-stack-server
+
+# Or download from: https://redis.io/docs/install/install-stack/windows/
+# Start Redis Stack: redis-stack-server
 ```
 
-GenJobMVC (ASP.NET)
+**Install MySQL:**
+```powershell
+# Windows (using Chocolatey)
+choco install mysql
 
-- Open `GenJobMVC/GenJobMVC.sln` in Visual Studio (or use `dotnet run` from the `GenJobMVC` folder).
+# Or download MySQL Community Server from: https://dev.mysql.com/downloads/mysql/
+# Create database: CREATE DATABASE genjob_db;
+```
 
+### ai-apis (Python Backend)
+```powershell
+cd "d:\C-drive mini\GenJob\ai-apis"
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn api:app --reload --port 8000
+```
+
+### GenJobMVC (ASP.NET)
+**Required NuGet Packages:**
+```powershell
+cd "d:\C-drive mini\GenJob\GenJobMVC\GenJobMVC"
+dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Pomelo.EntityFrameworkCore.MySql
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+dotnet add package Redis.OM
+dotnet add package iTextSharp
+dotnet add package DocumentFormat.OpenXml
+```
+
+**Run the application:**
+```powershell
+# Option 1: Visual Studio
+# Open GenJobMVC/GenJobMVC.sln in Visual Studio and run
+
+# Option 2: Command line
+cd "d:\C-drive mini\GenJob\GenJobMVC\GenJobMVC"
+dotnet ef database update
+dotnet run
+```
+
+**individual contributors:**
+- Devan Chauhan (https://github.com/Devan019)
+	- .net REST Apis
+	- ML prediction model/data analysis
+	- Redis caching
+	- GenAI integration
+	- LaTeX template design
+	- UI/UX design
+- Moksh Desai (https://github.com/MokshDesai)
+	- External package Resume parsing (iTextSharp/OpenXML)
+	- MVC controllers and views
+	- SharpAPI for ATS Score calculation
+- Nishant Dholakia (https://github.com/Nishant-Dholakia)
+	- Database (MySQL) Design
+	- Glassdoor API
+	- Identity framework
+	- EF Core integration
+	
 ## Notes and assumptions
 
 - The README API docs are derived from `ai-apis/api.py` and helper names; exact response structures from helpers (e.g., `getOtherData`, `getGraphData`) depend on their implementations under `ai-apis/helpers`.
